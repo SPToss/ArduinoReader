@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Aruino Address"
+        android:key="prefKeyArduinoAddress"
+        android:summary="Please specific IP address of Aruino device"
+        android:defaultValue="192.168.0.1"/>
+    <EditTextPreference
+        android:key="prefKeyArduinoCheckRate"
+        android:summary="How often app will call Arduino (in Seconds)"
+        android:title="Check rate"
+        android:numeric="integer"
+        android:defaultValue="30" />
+    <PreferenceCategory
+        android:title="Things to track"
+        android:key="prefKeyThingsToTrack">
+        <SwitchPreference android:title="Track humidity"
+            android:defaultValue="true"
+            android:summary="This option if selected will allow the application to check for humidity."
+            android:key="prefKeyTrackHumidity" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="prefKeyTrackTemperature"
+            android:summary="This option if selected will allow the application to check for temperature."
+            android:title="Track temperature" />
+        <ListPreference android:title="Unit of Temperature"
+            android:key="prefKeyUnitOfTemperature"
+            android:dependency="prefKeyTrackTemperature"
+            android:entries="@array/preferenceUnitOfTemperatureItems"
+            android:entryValues="@array/preferenceUnitOfTemperatureValues"
+            android:defaultValue="0"
+            android:summary="%s"/>
+    </PreferenceCategory>
+</PreferenceScreen>
