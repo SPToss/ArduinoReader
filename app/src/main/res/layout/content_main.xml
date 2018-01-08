@@ -33,6 +33,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="260dp"
         android:text="Connect"
+        android:id="@+id/ConnectButton"
         />
 
 

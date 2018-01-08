@@ -13,18 +13,36 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Timer;
+
+import pawlikowski.arduinoreader.Domain.BackGroundTimerTask;
 import pawlikowski.arduinoreader.VIew.Activity.ArduinoPreferenceActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+    BackGroundTimerTask backGroundTimerTask;
+    Timer timer;
+    final boolean Recived = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        backGroundTimerTask = new BackGroundTimerTask(this);
+        timer = new Timer();
+
+
+        Button button = (Button)findViewById(R.id.ConnectButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timer.schedule(backGroundTimerTask, 1000, 1000);
+            }
+        });
     }
 
     @Override

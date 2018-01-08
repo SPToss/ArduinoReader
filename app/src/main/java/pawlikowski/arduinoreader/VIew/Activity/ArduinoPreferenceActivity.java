@@ -25,7 +25,6 @@ public class ArduinoPreferenceActivity extends PreferenceActivity {
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference);
-
         }
     }
 
