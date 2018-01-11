@@ -34,6 +34,6 @@ public class BackGroundTimerTask extends TimerTask {
         if(hum){
             buf+="H";
         }
-        new UdpConnection().execute(buf,null,null);
+        new UdpConnection(_context).execute(buf,null,null);
     }
 }
