@@ -3,6 +3,7 @@ package pawlikowski.arduinoreader.Domain;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Set;
 
 import pawlikowski.arduinoreader.R;
 
@@ -47,10 +49,27 @@ public UdpConnection(Context context){
     public Boolean doInBackground(String... parameter) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(_context);
         String ipAddress = prefs.getString("prefKeyArduinoAddress", "");
-
+        final Button button = (Button) ((Activity) _context).findViewById(R.id.ConnectButton);
+        if(button.isEnabled()){
+            button.post(new Runnable() {
+                @Override
+                public void run() {
+                    button.setEnabled(false);
+                }
+            });
+            final TextView statu = (TextView) ((Activity) _context).findViewById(R.id.stat);
+            statu.post(new Runnable() {
+                @Override
+                public void run() {
+                    statu.setText("");
+                    statu.setText("ENABLED");
+                    statu.setTextColor(Color.GREEN);
+                }
+            });
+        }
         boolean result = false;
         byte[] buf = parameter[0].getBytes();
-        byte[] newBuf = Arrays.copyOf(buf,5);
+        byte[] newBuf = Arrays.copyOf(buf,10);
         try {
             diagramSocket = new DatagramSocket();
         } catch (SocketException e) {
@@ -79,32 +98,37 @@ public UdpConnection(Context context){
                 boolean hum =prefs.getBoolean("prefKeyTrackHumidity", true);
                 String temperature;
                 String humidty;
-                String[] datas = data.split(";");
+                String[] datas = data.split("-");
                 TextView vtemp = (TextView) ((Activity) _context).findViewById(R.id.temp);
                 TextView vhum = (TextView) ((Activity) _context).findViewById(R.id.hum);
-                vtemp.setVisibility(View.INVISIBLE);
-                vhum.setVisibility(View.INVISIBLE);
+                SetVisibility(vtemp,View.INVISIBLE);
+                SetVisibility(vhum,View.INVISIBLE);
                 if(temp){
                     if(hum){
-                        vtemp.setVisibility(View.VISIBLE);
-                        vhum.setVisibility(View.VISIBLE);
+                        SetVisibility(vtemp,View.VISIBLE);
+                        SetVisibility(vhum,View.VISIBLE);
 
-                         temperature = datas[0].replaceAll("\\D+","");
-                        vtemp.setText(temperature);
-                         humidty = datas[1].replaceAll("\\D+","");
-                         vhum.setText(humidty);
+                         temperature = datas[0].replaceAll("\\D.+","");
+                         SetText(vtemp,"Temp : " + temperature + "C");
+                        //vtemp.setText("Tem : " + temperature + "C");
+                         humidty = datas[1].replaceAll("\\D.+","");
+                         SetText(vhum,"Hum : " + humidty + "%");
+                    //     vhum.setText("Hum : " + humidty + "%");
                     }
                     else {
-                        vtemp.setVisibility(View.VISIBLE);
-                        temperature = datas[0].replaceAll("\\D+","");
-                        vtemp.setText(temperature);
+                        SetVisibility(vtemp,View.VISIBLE);
+
+                        temperature = datas[0].replaceAll("\\D.+","");
+                     //   vtemp.setText(temperature);
+                        SetText(vtemp,"Temp : " + temperature + "C");
                     }
                 }
                 else{
                     if(hum){
-                        vhum.setVisibility(View.VISIBLE);
-                        humidty = datas[1].replaceAll("\\D+","");
-                        vhum.setText(humidty);
+                        SetVisibility(vhum,View.VISIBLE);
+                        humidty = datas[1].replaceAll("\\D.+","");
+                      //  vhum.setText(humidty);
+                        SetText(vhum,"Temp : " + humidty + "%");
                     }
                 }
 
@@ -117,6 +141,24 @@ public UdpConnection(Context context){
 
 
         return result;
+    }
+
+    private void SetVisibility(final TextView textView, final int visibility){
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setVisibility(visibility);
+            }
+        });
+    }
+
+    private void SetText(final TextView textView, final String text){
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(text);
+            }
+        });
     }
 
 

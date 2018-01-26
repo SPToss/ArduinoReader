@@ -34,13 +34,14 @@ public class MainActivity extends AppCompatActivity {
 
         backGroundTimerTask = new BackGroundTimerTask(this);
         timer = new Timer();
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final int how = 1;
 
         Button button = (Button)findViewById(R.id.ConnectButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timer.schedule(backGroundTimerTask, 1000, 1000);
+                timer.schedule(backGroundTimerTask, how * 1000, how * 1000);
             }
         });
     }
